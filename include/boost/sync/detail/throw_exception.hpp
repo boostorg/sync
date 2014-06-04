@@ -36,7 +36,7 @@ namespace detail {
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
 
 template< typename Exception, typename... T >
-BOOST_NOINLINE BOOST_ATTRIBUTE_NORETURN void throw_exception(const char* func, const char* file, int line, T&&... args)
+BOOST_NOINLINE BOOST_NORETURN void throw_exception(const char* func, const char* file, int line, T&&... args)
 {
 #if !defined(BOOST_EXCEPTION_DISABLE)
     boost::throw_exception
@@ -63,7 +63,7 @@ BOOST_NOINLINE BOOST_ATTRIBUTE_NORETURN void throw_exception(const char* func, c
 #else // !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
 
 template< typename Exception >
-BOOST_NOINLINE BOOST_ATTRIBUTE_NORETURN void throw_exception(const char* func, const char* file, int line)
+BOOST_NOINLINE BOOST_NORETURN void throw_exception(const char* func, const char* file, int line)
 {
 #if !defined(BOOST_EXCEPTION_DISABLE)
     boost::throw_exception
@@ -88,7 +88,7 @@ BOOST_NOINLINE BOOST_ATTRIBUTE_NORETURN void throw_exception(const char* func, c
 }
 
 template< typename Exception, typename T0 >
-BOOST_NOINLINE BOOST_ATTRIBUTE_NORETURN void throw_exception(const char* func, const char* file, int line, T0 const& arg0)
+BOOST_NOINLINE BOOST_NORETURN void throw_exception(const char* func, const char* file, int line, T0 const& arg0)
 {
 #if !defined(BOOST_EXCEPTION_DISABLE)
     boost::throw_exception
@@ -113,7 +113,7 @@ BOOST_NOINLINE BOOST_ATTRIBUTE_NORETURN void throw_exception(const char* func, c
 }
 
 template< typename Exception, typename T0, typename T1 >
-BOOST_NOINLINE BOOST_ATTRIBUTE_NORETURN void throw_exception(const char* func, const char* file, int line, T0 const& arg0, T1 const& arg1)
+BOOST_NOINLINE BOOST_NORETURN void throw_exception(const char* func, const char* file, int line, T0 const& arg0, T1 const& arg1)
 {
 #if !defined(BOOST_EXCEPTION_DISABLE)
     boost::throw_exception
@@ -138,7 +138,7 @@ BOOST_NOINLINE BOOST_ATTRIBUTE_NORETURN void throw_exception(const char* func, c
 }
 
 template< typename Exception, typename T0, typename T1, typename T2 >
-BOOST_NOINLINE BOOST_ATTRIBUTE_NORETURN void throw_exception(const char* func, const char* file, int line, T0 const& arg0, T1 const& arg1, T2 const& arg2)
+BOOST_NOINLINE BOOST_NORETURN void throw_exception(const char* func, const char* file, int line, T0 const& arg0, T1 const& arg1, T2 const& arg2)
 {
 #if !defined(BOOST_EXCEPTION_DISABLE)
     boost::throw_exception
