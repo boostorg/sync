@@ -154,3 +154,6 @@ boostbook sync
         <format>pdf:<xsl:param>boost.url.prefix=http://www.boost.org/doc/libs/release/libs/sync/doc/html
         <format>pdf:<xsl:param>img.src.path=$(images_location)/
     ;
+
+alias boostdoc : sync
+    : : : <implicit-dependency>sync ;
