@@ -172,7 +172,7 @@ public:
     //! Creates time point from duration since 1970-Jan-01
     explicit system_time_point(system_duration dur) BOOST_NOEXCEPT
     {
-        m_value.tv_sec = static_cast<::time_t>(dur.get() / subsecond_fraction);
+        m_value.tv_sec = static_cast< ::time_t>(dur.get() / subsecond_fraction);
         m_value.tv_nsec = dur.get() % subsecond_fraction;
     }
 
