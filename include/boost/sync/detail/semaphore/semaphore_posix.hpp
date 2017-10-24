@@ -15,7 +15,7 @@
 #include <semaphore.h>
 
 #include <boost/assert.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/core/enable_if.hpp>
 #include <boost/sync/detail/config.hpp>
 #include <boost/sync/exceptions/resource_error.hpp>
 #include <boost/sync/exceptions/overflow_error.hpp>

@@ -19,7 +19,7 @@
 
 #include <cstddef>
 #include <boost/assert.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/core/enable_if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/sync/detail/config.hpp>
 #include <boost/sync/locks/unique_lock_fwd.hpp>

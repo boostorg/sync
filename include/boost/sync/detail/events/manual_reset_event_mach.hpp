@@ -11,7 +11,7 @@
 #define BOOST_SYNC_DETAIL_EVENTS_MANUAL_RESET_EVENT_MACH_HPP_INCLUDED_
 
 #include <boost/cstdint.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/core/enable_if.hpp>
 #include <boost/sync/detail/config.hpp>
 #include <boost/sync/detail/atomic.hpp>
 #include <boost/sync/detail/time_traits.hpp>

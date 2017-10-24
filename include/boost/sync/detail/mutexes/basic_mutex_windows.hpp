@@ -19,10 +19,10 @@
 
 #include <cstddef>
 #include <boost/assert.hpp>
-#include <boost/detail/winapi/handles.hpp>
-#include <boost/detail/winapi/event.hpp>
-#include <boost/detail/winapi/wait.hpp>
-#include <boost/detail/winapi/get_last_error.hpp>
+#include <boost/winapi/handles.hpp>
+#include <boost/winapi/event.hpp>
+#include <boost/winapi/wait.hpp>
+#include <boost/winapi/get_last_error.hpp>
 #include <boost/sync/detail/config.hpp>
 #include <boost/sync/exceptions/lock_error.hpp>
 #include <boost/sync/exceptions/resource_error.hpp>
@@ -56,7 +56,7 @@ public:
 
 public:
     long m_active_count;
-    boost::detail::winapi::HANDLE_ m_event;
+    boost::winapi::HANDLE_ m_event;
 
 public:
     BOOST_CONSTEXPR basic_mutex() BOOST_NOEXCEPT : m_active_count(0), m_event(NULL)
@@ -66,7 +66,7 @@ public:
     ~basic_mutex()
     {
         if (m_event)
-            BOOST_VERIFY(boost::detail::winapi::CloseHandle(m_event) != 0);
+            BOOST_VERIFY(boost::winapi::CloseHandle(m_event) != 0);
     }
 
     void lock()
@@ -83,7 +83,7 @@ public:
         {
             if (!sync::detail::windows::interlocked_bit_test_and_set(&m_active_count, event_set_flag_bit))
             {
-                boost::detail::winapi::SetEvent(get_event());
+                boost::winapi::SetEvent(get_event());
             }
         }
     }
@@ -93,13 +93,13 @@ public:
         return !sync::detail::windows::interlocked_bit_test_and_set(&m_active_count, lock_flag_bit);
     }
 
-    boost::detail::winapi::HANDLE_ get_event()
+    boost::winapi::HANDLE_ get_event()
     {
-        boost::detail::winapi::HANDLE_ event = sync::detail::windows::interlocked_read_acquire(&m_event);
+        boost::winapi::HANDLE_ event = sync::detail::windows::interlocked_read_acquire(&m_event);
 
         if (!event)
         {
-            event = boost::detail::winapi::create_anonymous_event(NULL, false, false);
+            event = boost::winapi::create_anonymous_event(NULL, false, false);
             if (event)
             {
 #ifdef BOOST_MSVC
@@ -107,19 +107,19 @@ public:
 #pragma warning(disable:4311)
 #pragma warning(disable:4312)
 #endif
-                boost::detail::winapi::HANDLE_ const old_event = BOOST_ATOMIC_INTERLOCKED_COMPARE_EXCHANGE_POINTER(&m_event, event, NULL);
+                boost::winapi::HANDLE_ const old_event = BOOST_ATOMIC_INTERLOCKED_COMPARE_EXCHANGE_POINTER(&m_event, event, NULL);
 #ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
                 if (old_event != NULL)
                 {
-                    boost::detail::winapi::CloseHandle(event);
+                    boost::winapi::CloseHandle(event);
                     return old_event;
                 }
             }
             else
             {
-                const boost::detail::winapi::DWORD_ err = boost::detail::winapi::GetLastError();
+                const boost::winapi::DWORD_ err = boost::winapi::GetLastError();
                 BOOST_SYNC_DETAIL_THROW(resource_error, (err)("failed to create an event object"));
             }
         }
@@ -170,13 +170,13 @@ private:
 
         if (old_count & lock_flag_value) try
         {
-            boost::detail::winapi::HANDLE_ const evt = get_event();
+            boost::winapi::HANDLE_ const evt = get_event();
             do
             {
-                const boost::detail::winapi::DWORD_ retval = boost::detail::winapi::WaitForSingleObject(evt, boost::detail::winapi::infinite);
-                if (retval != boost::detail::winapi::wait_object_0)
+                const boost::winapi::DWORD_ retval = boost::winapi::WaitForSingleObject(evt, boost::winapi::infinite);
+                if (retval != boost::winapi::wait_object_0)
                 {
-                    const boost::detail::winapi::DWORD_ err = boost::detail::winapi::GetLastError();
+                    const boost::winapi::DWORD_ err = boost::winapi::GetLastError();
                     BOOST_SYNC_DETAIL_THROW(lock_error, (err)("failed to wait on the event object"));
                 }
                 clear_waiting_and_try_lock(old_count);

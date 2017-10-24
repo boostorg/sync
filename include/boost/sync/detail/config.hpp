@@ -29,7 +29,7 @@
 
 #elif defined(BOOST_WINDOWS)
 
-#include <boost/detail/winapi/config.hpp>
+#include <boost/winapi/config.hpp>
 #define BOOST_SYNC_DETAIL_PLATFORM_WINAPI
 
 #elif defined(__linux__) || defined(__linux) || defined(linux)
