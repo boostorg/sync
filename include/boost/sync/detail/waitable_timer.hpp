@@ -103,7 +103,7 @@ struct waitable_timer_state
                 boost::winapi::CloseHandle(waitable_timer);
         }
 
-        static void NTAPI destroy(boost::winapi::PVOID_ p, boost::winapi::BOOLEAN_ /*timed_out*/)
+        static void BOOST_WINAPI_NTAPI_CC destroy(boost::winapi::PVOID_ p, boost::winapi::BOOLEAN_ /*timed_out*/)
         {
             delete static_cast< thread_local_context* >(p);
         }
@@ -173,7 +173,7 @@ struct waitable_timer_state
         {
             // The semaphore is not created yet
             boost::winapi::DWORD_ key = boost::winapi::TlsAlloc();
-            if (key == boost::winapi::tls_out_of_indexes)
+            if (BOOST_UNLIKELY(key == boost::winapi::tls_out_of_indexes))
             {
                 boost::winapi::DWORD_ err = boost::winapi::GetLastError();
                 BOOST_ATOMIC_INTERLOCKED_EXCHANGE(&initialized, st_uninitialized);
@@ -186,7 +186,7 @@ struct waitable_timer_state
             );
 
             boost::winapi::DWORD_ err = boost::winapi::GetLastError();
-            if (!tls_key_holder)
+            if (BOOST_UNLIKELY(!tls_key_holder))
             {
                 // Cannot create a semaphore. Too bad, this will cause TLS slots to be allocated for every module.
                 tls_key = key;
@@ -210,8 +210,7 @@ struct waitable_timer_state
         // Release the semaphore on process exit
         std::atexit(&waitable_timer_state::destroy);
 
-        typedef boost::winapi::DWORD_ NTSTATUS_;
-        typedef NTSTATUS_ (__stdcall *NtQuerySemaphore_t)(boost::winapi::HANDLE_ h, unsigned int info_class, semaphore_basic_information* pinfo, boost::winapi::ULONG_ info_size, boost::winapi::ULONG_* ret_len);
+        typedef boost::winapi::NTSTATUS_ (BOOST_WINAPI_NTAPI_CC *NtQuerySemaphore_t)(boost::winapi::HANDLE_ h, unsigned int info_class, semaphore_basic_information* pinfo, boost::winapi::ULONG_ info_size, boost::winapi::ULONG_* ret_len);
 
         // Retrieve the TLS key from the semaphore
         const boost::winapi::HMODULE_ ntdll = boost::winapi::GetModuleHandleW(L"ntdll.dll");
@@ -219,7 +218,7 @@ struct waitable_timer_state
         if (nt_query_semaphore)
         {
             semaphore_basic_information info = {};
-            NTSTATUS_ err = nt_query_semaphore(tls_key_holder, 0 /* SemaphoreBasicInformation */, &info, sizeof(info), NULL);
+            boost::winapi::NTSTATUS_ err = nt_query_semaphore(tls_key_holder, 0 /* SemaphoreBasicInformation */, &info, sizeof(info), NULL);
             if (err == 0)
             {
                 tls_key = static_cast< boost::winapi::DWORD_ >(info.current_count);
@@ -311,7 +310,7 @@ inline boost::winapi::HANDLE_ get_waitable_timer()
         p = state.create_thread_local_context();
 
     // Check that the thread local context is ABI-compatible
-    if (p->boost_version != BOOST_VERSION)
+    if (BOOST_UNLIKELY(p->boost_version != BOOST_VERSION))
         BOOST_SYNC_DETAIL_THROW(std::logic_error, ("Boost.Sync: different Boost versions are used in the application"));
 
     return p->waitable_timer;
