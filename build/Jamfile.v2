@@ -177,3 +177,6 @@ lib boost_sync
     :
       <conditional>@usage-requirements
     ;
+
+
+boost-install boost_sync ;
