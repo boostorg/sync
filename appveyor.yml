@@ -32,17 +32,16 @@ environment:
     - TOOLSET: msvc-14.1
       ADDRESS_MODEL: 64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-# Boost.Thread does not compile for Cygwin
-#    - TOOLSET: gcc
-#      ADDRESS_MODEL: 64
-#      B2_ARGS: cxxflags=-std=c++03
-#      ADDPATH: C:\cygwin64\bin
-#      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-#    - TOOLSET: gcc
-#      ADDRESS_MODEL: 64
-#      B2_ARGS: cxxflags=-std=c++11
-#      ADDPATH: C:\cygwin64\bin
-#      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    - TOOLSET: gcc
+      ADDRESS_MODEL: 64
+      B2_ARGS: cxxflags=-std=c++03
+      ADDPATH: C:\cygwin64\bin
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    - TOOLSET: gcc
+      ADDRESS_MODEL: 64
+      B2_ARGS: cxxflags=-std=c++11
+      ADDPATH: C:\cygwin64\bin
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     - TOOLSET: gcc
       ADDRESS_MODEL: 64
       B2_ARGS: cxxflags=-std=c++03
@@ -82,17 +81,16 @@ environment:
     - TOOLSET: msvc-14.1
       ADDRESS_MODEL: 32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-# Boost.Thread does not compile for Cygwin
-#    - TOOLSET: gcc
-#      ADDRESS_MODEL: 32
-#      B2_ARGS: cxxflags=-std=c++03
-#      ADDPATH: C:\cygwin\bin
-#      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-#    - TOOLSET: gcc
-#      ADDRESS_MODEL: 32
-#      B2_ARGS: cxxflags=-std=c++11
-#      ADDPATH: C:\cygwin\bin
-#      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    - TOOLSET: gcc
+      ADDRESS_MODEL: 32
+      B2_ARGS: cxxflags=-std=c++03
+      ADDPATH: C:\cygwin\bin
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    - TOOLSET: gcc
+      ADDRESS_MODEL: 32
+      B2_ARGS: cxxflags=-std=c++11
+      ADDPATH: C:\cygwin\bin
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     - TOOLSET: gcc
       ADDRESS_MODEL: 32
       B2_ARGS: cxxflags=-std=c++03
