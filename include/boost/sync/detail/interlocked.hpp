@@ -5,7 +5,7 @@
  *
  * (C) Copyright 2005-8 Anthony Williams
  * (C) Copyright 2012-2013 Vicente J. Botet Escriba
- * (C) Copyright 2013 Andrey Semashev
+ * (C) Copyright 2013, 2018 Andrey Semashev
  */
 /*!
  * \file   interlocked.hpp
@@ -107,6 +107,59 @@ BOOST_FORCEINLINE bool interlocked_bit_test_and_reset(long* x, long bit) BOOST_N
 }
 
 #define BOOST_SYNC_DETAIL_BTS_DEFINED
+
+#elif defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
+
+BOOST_FORCEINLINE bool interlocked_bit_test_and_set(long* x, long bit) BOOST_NOEXCEPT
+{
+    bool res;
+#if defined(__GCC_ASM_FLAG_OUTPUTS__)
+    __asm__ __volatile__
+    (
+        "lock; bts %[bit_number], %[storage]\n\t"
+        : [storage] "+m" (*x), [result] "=@ccc" (res)
+        : [bit_number] "Kq" (bit)
+        : "memory"
+    );
+#else
+    __asm__ __volatile__
+    (
+        "lock; bts %[bit_number], %[storage]\n\t"
+        "setc %[result]\n\t"
+        : [storage] "+m" (*x), [result] "=q" (res)
+        : [bit_number] "Kq" (bit)
+        : "cc", "memory"
+    );
+#endif
+    return res;
+}
+
+BOOST_FORCEINLINE bool interlocked_bit_test_and_reset(long* x, long bit) BOOST_NOEXCEPT
+{
+    bool res;
+#if defined(__GCC_ASM_FLAG_OUTPUTS__)
+    __asm__ __volatile__
+    (
+        "lock; btr %[bit_number], %[storage]\n\t"
+        : [storage] "+m" (*x), [result] "=@ccc" (res)
+        : [bit_number] "Kq" (bit)
+        : "memory"
+    );
+#else
+    __asm__ __volatile__
+    (
+        "lock; btr %[bit_number], %[storage]\n\t"
+        "setc %[result]\n\t"
+        : [storage] "+m" (*x), [result] "=q" (res)
+        : [bit_number] "Kq" (bit)
+        : "cc", "memory"
+    );
+#endif
+    return res;
+}
+
+#define BOOST_SYNC_DETAIL_BTS_DEFINED
+
 #endif
 
 #ifndef BOOST_SYNC_DETAIL_BTS_DEFINED
@@ -149,6 +202,8 @@ BOOST_FORCEINLINE bool interlocked_bit_test_and_reset(long* x, long bit) BOOST_N
 extern "C" void _ReadWriteBarrier(void);
 #pragma intrinsic(_ReadWriteBarrier)
 #define BOOST_SYNC_COMPILER_BARRIER() _ReadWriteBarrier()
+#elif defined(__GNUC__)
+#define BOOST_SYNC_COMPILER_BARRIER() __asm__ __volatile__ ("" ::: "memory");
 #endif
 
 #ifdef BOOST_SYNC_COMPILER_BARRIER
