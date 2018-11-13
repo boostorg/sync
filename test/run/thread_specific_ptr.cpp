@@ -196,6 +196,14 @@ BOOST_AUTO_TEST_CASE(test_tss)
     timed_test(&do_test_tss, 2);
 }
 
+#if !defined(UBSAN)
+
+// thread_specific_ptr does type erasure as it casts the pointer to the cleanup function to a similar but different pointer to function that receives a void* argument.
+// The cleanup function is then called through the casted pointer. UBSan flags this as an error, and in strict C++ it is true. But on all real
+// systems this works as intended since the two pointers have exactly the same calling conventions. This optimization allows us to avoid allocating dynamic
+// memory and proxying the call through a shim, which will only cast the pointer from void* to T*. This saves dynamic memory, code size and compile time, so we really
+// want this optimization. Therefore, disable UBSan for these tests.
+
 bool tss_cleanup_called = false;
 
 struct Dummy
@@ -268,6 +276,13 @@ void do_test_tss_does_no_cleanup_after_release()
     }
 }
 
+BOOST_AUTO_TEST_CASE(test_tss_does_no_cleanup_after_release)
+{
+    timed_test(&do_test_tss_does_no_cleanup_after_release, 2);
+}
+
+#endif // !defined(UBSAN)
+
 struct dummy_class_tracks_deletions
 {
     static unsigned deletions;
@@ -309,15 +324,14 @@ void do_test_tss_does_no_cleanup_with_null_cleanup_function()
     }
 }
 
-BOOST_AUTO_TEST_CASE(test_tss_does_no_cleanup_after_release)
-{
-    timed_test(&do_test_tss_does_no_cleanup_after_release, 2);
-}
-
 BOOST_AUTO_TEST_CASE(test_tss_does_no_cleanup_with_null_cleanup_function)
 {
     timed_test(&do_test_tss_does_no_cleanup_with_null_cleanup_function, 2);
 }
+
+#if !defined(UBSAN)
+
+// See the comment above about why the tests with custom cleanup functions are disabled for UBSan.
 
 void thread_with_local_tss_ptr()
 {
@@ -381,3 +395,5 @@ BOOST_AUTO_TEST_CASE(test_tss_at_the_same_adress)
     ptr->~ptr_t();
     BOOST_CHECK(!tss_cleanup_called);
 }
+
+#endif // !defined(UBSAN)
