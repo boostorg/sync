@@ -128,7 +128,7 @@ matrix:
         apt:
           packages:
             - clang-3.5
-            - g++-4.8-multilib
+            - g++-4.9-multilib
             - linux-libc-dev:i386
           sources:
             - ubuntu-toolchain-r-test
@@ -140,7 +140,7 @@ matrix:
         apt:
           packages:
             - clang-3.6
-            - g++-4.8-multilib
+            - g++-5-multilib
             - linux-libc-dev:i386
           sources:
             - ubuntu-toolchain-r-test
@@ -152,7 +152,7 @@ matrix:
         apt:
           packages:
             - clang-3.7
-            - g++-4.8-multilib
+            - g++-5-multilib
             - linux-libc-dev:i386
           sources:
             - ubuntu-toolchain-r-test
@@ -164,7 +164,7 @@ matrix:
         apt:
           packages:
             - clang-3.8
-            - g++-4.8-multilib
+            - g++-5-multilib
             - linux-libc-dev:i386
           sources:
             - ubuntu-toolchain-r-test
@@ -176,7 +176,7 @@ matrix:
         apt:
           packages:
             - clang-3.9
-            - g++-4.8-multilib
+            - g++-5-multilib
             - linux-libc-dev:i386
           sources:
             - ubuntu-toolchain-r-test
@@ -188,7 +188,7 @@ matrix:
         apt:
           packages:
             - clang-4.0
-            - g++-4.8-multilib
+            - g++-5-multilib
             - linux-libc-dev:i386
           sources:
             - ubuntu-toolchain-r-test
@@ -200,7 +200,7 @@ matrix:
         apt:
           packages:
             - clang-5.0
-            - g++-4.8-multilib
+            - g++-5-multilib
             - linux-libc-dev:i386
           sources:
             - ubuntu-toolchain-r-test
@@ -212,7 +212,7 @@ matrix:
         apt:
           packages:
             - clang-6.0
-            - g++-4.9-multilib
+            - g++-5-multilib
             - linux-libc-dev:i386
           sources:
             - ubuntu-toolchain-r-test
@@ -224,7 +224,7 @@ matrix:
         apt:
           packages:
             - clang-7
-            - g++-4.9-multilib
+            - g++-5-multilib
             - linux-libc-dev:i386
           sources:
             - ubuntu-toolchain-r-test
