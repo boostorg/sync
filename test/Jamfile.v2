@@ -21,7 +21,7 @@ project
 
 rule test_all
 {
-   local all_rules = ;
+   local all_rules ;
 
    for local fileb in [ glob run/*.cpp ]
    {
@@ -39,4 +39,4 @@ rule test_all
     return $(all_rules) ;
 }
 
-test-suite sync : [ test_all r ] : <threading>multi ;
+test-suite sync : [ test_all ] : <threading>multi ;
