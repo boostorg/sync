@@ -270,7 +270,7 @@ private:
         time_point now = clock::now();
         do
         {
-            if (timed_wait(sync::detail::time_traits< duration >::to_sync_unit(t.get() - now)))
+            if (priv_timed_wait(sync::detail::time_traits< duration >::to_sync_unit(t.get() - now)))
                 return true;
             now = clock::now();
         }
