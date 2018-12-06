@@ -220,4 +220,20 @@ BOOST_AUTO_TEST_CASE(test_semaphore_timed_wait)
         // guessing!
         BOOST_REQUIRE( (end - start) < posix_time::milliseconds(100) );
     }
+
+    {
+        // timed wait after timeout
+        boost::sync::semaphore sema;
+
+        using namespace boost::chrono;
+
+        BOOST_AUTO(start, steady_clock::now());
+        BOOST_AUTO(timeout, start + milliseconds(100));
+
+        boost::this_thread::sleep_for(milliseconds(500));
+
+        sema.post();
+
+        BOOST_REQUIRE(sema.wait_until(timeout));
+    }
 }

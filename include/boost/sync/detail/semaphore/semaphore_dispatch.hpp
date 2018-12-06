@@ -130,12 +130,12 @@ private:
         typedef typename time_point::clock clock;
         typedef typename time_point::duration duration;
         time_point now = clock::now();
-        while (now < t.get())
+        do
         {
             if (priv_timed_wait(sync::detail::time_traits< duration >::to_sync_unit(t.get() - now)))
                 return true;
             now = clock::now();
-        }
+        } while (now < t.get());
         return false;
     }
 
