@@ -90,7 +90,7 @@ install:
   - git submodule init tools/build
   - git submodule init tools/boost_install
   - git submodule init libs/headers
-  - git submodule update
+  - git submodule update --jobs 4
   - xcopy /s /e /q %APPVEYOR_BUILD_FOLDER% libs\sync
   - python tools/boostdep/depinst/depinst.py sync
   - cmd /c bootstrap

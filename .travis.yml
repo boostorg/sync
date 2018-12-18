@@ -260,7 +260,7 @@ install:
   - git submodule init tools/build
   - git submodule init tools/boost_install
   - git submodule init libs/headers
-  - git submodule update
+  - git submodule update --jobs 4
   - cp -r $TRAVIS_BUILD_DIR/* libs/sync
   - python tools/boostdep/depinst/depinst.py sync
   - ./bootstrap.sh
