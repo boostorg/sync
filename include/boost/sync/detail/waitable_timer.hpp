@@ -32,8 +32,8 @@
 #include <boost/winapi/waitable_timer.hpp>
 #include <boost/winapi/semaphore.hpp>
 #include <boost/winapi/get_last_error.hpp>
+#include <boost/detail/interlocked.hpp>
 #include <boost/sync/detail/config.hpp>
-#include <boost/sync/detail/interlocked.hpp>
 #include <boost/sync/detail/weak_linkage.hpp>
 #include <boost/sync/detail/throw_exception.hpp>
 #include <boost/sync/exceptions/resource_error.hpp>
@@ -74,6 +74,7 @@ struct waitable_timer_state
         st_initialized
     };
 
+    // Note: Not using atomic<> for `initialized` to keep this class POD. This guarantees static initialization in C++03.
     long initialized;
     boost::winapi::DWORD_ tls_key;
     boost::winapi::HANDLE_ tls_key_holder;
@@ -123,7 +124,7 @@ struct waitable_timer_state
     {
         while (true)
         {
-            long old_val = BOOST_ATOMIC_INTERLOCKED_COMPARE_EXCHANGE(&initialized, st_in_progress, st_uninitialized);
+            long old_val = BOOST_INTERLOCKED_COMPARE_EXCHANGE(&initialized, st_in_progress, st_uninitialized);
             if (old_val == st_in_progress)
             {
                 // Wait for another thread
@@ -176,7 +177,7 @@ struct waitable_timer_state
             if (BOOST_UNLIKELY(key == boost::winapi::tls_out_of_indexes))
             {
                 boost::winapi::DWORD_ err = boost::winapi::GetLastError();
-                BOOST_ATOMIC_INTERLOCKED_EXCHANGE(&initialized, st_uninitialized);
+                BOOST_INTERLOCKED_EXCHANGE(&initialized, st_uninitialized);
                 BOOST_SYNC_DETAIL_THROW(resource_error, (err)("Boost.Sync: unable to allocate a TLS slot"));
             }
 
@@ -190,7 +191,7 @@ struct waitable_timer_state
             {
                 // Cannot create a semaphore. Too bad, this will cause TLS slots to be allocated for every module.
                 tls_key = key;
-                BOOST_ATOMIC_INTERLOCKED_EXCHANGE(&initialized, st_initialized);
+                BOOST_INTERLOCKED_EXCHANGE(&initialized, st_initialized);
                 return;
             }
             else if (err == ERROR_ALREADY_EXISTS)
@@ -202,7 +203,7 @@ struct waitable_timer_state
             {
                 tls_key = key;
                 std::atexit(&waitable_timer_state::destroy);
-                BOOST_ATOMIC_INTERLOCKED_EXCHANGE(&initialized, st_initialized);
+                BOOST_INTERLOCKED_EXCHANGE(&initialized, st_initialized);
                 return;
             }
         }
@@ -222,7 +223,7 @@ struct waitable_timer_state
             if (err == 0)
             {
                 tls_key = static_cast< boost::winapi::DWORD_ >(info.current_count);
-                BOOST_ATOMIC_INTERLOCKED_EXCHANGE(&initialized, st_initialized);
+                BOOST_INTERLOCKED_EXCHANGE(&initialized, st_initialized);
                 return;
             }
         }
@@ -232,12 +233,12 @@ struct waitable_timer_state
         if (key == boost::winapi::tls_out_of_indexes)
         {
             boost::winapi::DWORD_ err = boost::winapi::GetLastError();
-            BOOST_ATOMIC_INTERLOCKED_EXCHANGE(&initialized, st_uninitialized);
+            BOOST_INTERLOCKED_EXCHANGE(&initialized, st_uninitialized);
             BOOST_SYNC_DETAIL_THROW(resource_error, (err)("Boost.Sync: unable to allocate a TLS slot"));
         }
 
         tls_key = key;
-        BOOST_ATOMIC_INTERLOCKED_EXCHANGE(&initialized, st_initialized);
+        BOOST_INTERLOCKED_EXCHANGE(&initialized, st_initialized);
     }
 
     //! Initializes the thread-specific context

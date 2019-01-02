@@ -20,13 +20,14 @@
 #include <cstddef>
 #include <boost/cstdint.hpp>
 #include <boost/assert.hpp>
+#include <boost/memory_order.hpp>
+#include <boost/atomic/atomic.hpp>
 #include <boost/core/enable_if.hpp>
 #include <boost/winapi/wait.hpp>
 #include <boost/winapi/waitable_timer.hpp>
 #include <boost/sync/exceptions/lock_error.hpp>
 #include <boost/sync/detail/config.hpp>
 #include <boost/sync/detail/throw_exception.hpp>
-#include <boost/sync/detail/interlocked.hpp>
 #include <boost/sync/detail/time_traits.hpp>
 #include <boost/sync/detail/time_units.hpp>
 #include <boost/sync/detail/waitable_timer.hpp>
@@ -109,9 +110,9 @@ public:
 private:
     bool priv_timed_lock(sync::detail::system_time_point const& t)
     {
-        long old_count = m_mutex.m_active_count;
+        boost::uint32_t old_count = m_mutex.m_active_count.load(boost::memory_order_acquire);
         m_mutex.mark_waiting_and_try_lock(old_count);
-        if ((old_count & sync::detail::windows::basic_mutex::lock_flag_value) == 0)
+        if ((old_count & sync::detail::windows::basic_mutex::lock_flag_value) == 0u)
             return true;
 
         try
@@ -120,7 +121,7 @@ private:
             handles[0] = m_mutex.get_event();
             handles[1] = sync::detail::windows::get_waitable_timer();
 
-            if (!boost::winapi::SetWaitableTimer(handles[1], reinterpret_cast< const boost::winapi::LARGE_INTEGER_* >(&t.get()), 0, NULL, NULL, false))
+            if (BOOST_UNLIKELY(!boost::winapi::SetWaitableTimer(handles[1], reinterpret_cast< const boost::winapi::LARGE_INTEGER_* >(&t.get()), 0, NULL, NULL, false)))
             {
                 const boost::winapi::DWORD_ err = boost::winapi::GetLastError();
                 BOOST_SYNC_DETAIL_THROW(lock_error, (err)("timed_mutex::timed_lock failed to set a timeout"));
@@ -129,7 +130,7 @@ private:
             while (true)
             {
                 const boost::winapi::DWORD_ res = boost::winapi::WaitForMultipleObjects(sizeof(handles) / sizeof(*handles), handles, false, boost::winapi::infinite);
-                if (res == boost::winapi::wait_failed)
+                if (BOOST_UNLIKELY(res == boost::winapi::wait_failed))
                 {
                     const boost::winapi::DWORD_ err = boost::winapi::GetLastError();
                     BOOST_SYNC_DETAIL_THROW(lock_error, (err)("timed_mutex::timed_lock failed in WaitForMultipleObjects"));
@@ -144,26 +145,26 @@ private:
                     break;
 
                 case boost::winapi::wait_object_0 + 1: // timeout has expired
-                    BOOST_ATOMIC_INTERLOCKED_EXCHANGE_ADD(&m_mutex.m_active_count, -1);
+                    m_mutex.m_active_count.opaque_sub(1u, boost::memory_order_relaxed);
                     return false;
 
                 default:
-                    BOOST_ASSERT(false);
+                    BOOST_UNREACHABLE_RETURN(false);
                 }
             }
         }
         catch (...)
         {
-            BOOST_ATOMIC_INTERLOCKED_EXCHANGE_ADD(&m_mutex.m_active_count, -1);
+            m_mutex.m_active_count.opaque_sub(1u, boost::memory_order_relaxed);
             throw;
         }
     }
 
     bool priv_timed_lock(sync::detail::system_duration t)
     {
-        long old_count = m_mutex.m_active_count;
+        boost::uint32_t old_count = m_mutex.m_active_count.load(boost::memory_order_acquire);
         m_mutex.mark_waiting_and_try_lock(old_count);
-        if ((old_count & sync::detail::windows::basic_mutex::lock_flag_value) == 0)
+        if ((old_count & sync::detail::windows::basic_mutex::lock_flag_value) == 0u)
             return true;
 
         try
@@ -195,13 +196,13 @@ private:
                 }
             }
 
-            BOOST_ATOMIC_INTERLOCKED_EXCHANGE_ADD(&m_mutex.m_active_count, -1);
+            m_mutex.m_active_count.opaque_sub(1u, boost::memory_order_relaxed);
 
             return false;
         }
         catch (...)
         {
-            BOOST_ATOMIC_INTERLOCKED_EXCHANGE_ADD(&m_mutex.m_active_count, -1);
+            m_mutex.m_active_count.opaque_sub(1u, boost::memory_order_relaxed);
             throw;
         }
     }
