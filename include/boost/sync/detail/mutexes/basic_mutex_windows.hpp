@@ -81,7 +81,7 @@ public:
 
     void unlock() BOOST_NOEXCEPT
     {
-        BOOST_CONSEXPR_OR_CONST boost::uint32_t offset = lock_flag_value;
+        BOOST_CONSTEXPR_OR_CONST boost::uint32_t offset = lock_flag_value;
         const boost::uint32_t old_count = m_active_count.fetch_add(offset, boost::memory_order_release);
         if ((old_count & event_set_flag_value) == 0u && (old_count > offset))
         {
@@ -111,7 +111,7 @@ public:
                 const bool succeeded = m_event.compare_exchange_strong(old_event, event, boost::memory_order_acquire, boost::memory_order_relaxed);
                 if (BOOST_UNLIKELY(!succeeded))
                 {
-                    boost::winapi::CloseHandle(event);
+                    boost::winapi::CloseHandle(reinterpret_cast< boost::winapi::HANDLE_ >(event));
                     return reinterpret_cast< boost::winapi::HANDLE_ >(old_event);
                 }
             }

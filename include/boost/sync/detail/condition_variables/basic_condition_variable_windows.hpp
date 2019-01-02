@@ -258,7 +258,7 @@ public:
 private:
     void wake_waiters(std::size_t count_to_wake) BOOST_NOEXCEPT
     {
-        m_total_waiter_count.write(m_total_waiter_count - count_to_wake, boost::memory_order_relaxed);
+        m_total_waiter_count.opaque_sub(count_to_wake, boost::memory_order_relaxed);
         if (count_to_wake > 0u)
         {
             while (true)
@@ -267,7 +267,7 @@ private:
                 if (n > 0u)
                 {
                     if (n > count_to_wake)
-                        n = count_to_wake;
+                        n = static_cast< unsigned long >(count_to_wake);
                     m_notify_state->m_notify_count += n;
                     count_to_wake -= n;
                     boost::winapi::ReleaseSemaphore(m_notify_state->m_semaphore, static_cast< long >(n), NULL);
