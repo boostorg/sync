@@ -12,7 +12,6 @@ project
         <threading>multi
         <hardcode-dll-paths>true
         <library>/boost/sync//boost_sync
-        <library>/boost/system//boost_system
         <library>/boost/thread//boost_thread
         <library>/boost/date_time//boost_date_time
     ;
