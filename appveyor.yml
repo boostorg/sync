@@ -93,6 +93,7 @@ install:
   - git submodule init libs/headers
   - git submodule init libs/config
   - git submodule update --jobs %GIT_FETCH_JOBS%
+  - if not exist libs\sync\ mkdir libs\sync
   - xcopy /s /e /q %APPVEYOR_BUILD_FOLDER% libs\sync
   - python tools/boostdep/depinst/depinst.py --git_args "--jobs %GIT_FETCH_JOBS%" sync
   - cmd /c bootstrap

@@ -263,6 +263,7 @@ install:
   - git submodule init libs/headers
   - git submodule init libs/config
   - git submodule update --jobs $GIT_FETCH_JOBS
+  - mkdir -p libs/sync
   - cp -r $TRAVIS_BUILD_DIR/* libs/sync
   - python tools/boostdep/depinst/depinst.py --git_args "--jobs $GIT_FETCH_JOBS" sync
   - ./bootstrap.sh
