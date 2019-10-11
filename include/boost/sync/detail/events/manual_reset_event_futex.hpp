@@ -61,17 +61,17 @@ public:
         while (m_state.load(detail::atomic_ns::memory_order_acquire) == 0)
         {
             const int status = sync::detail::linux_::futex_wait(reinterpret_cast< int* >(&m_state), 0);
-            if (status == 0)
-                break;
-
-            switch (errno)
+            if (BOOST_UNLIKELY(status != 0))
             {
-            case EINTR:       // signal received
-            case EWOULDBLOCK: // another thread has reset the event
-                continue;
+                switch (errno)
+                {
+                case EINTR:       // signal received
+                case EWOULDBLOCK: // another thread has reset the event
+                    break;
 
-            default:
-                BOOST_ASSERT(false);
+                default:
+                    BOOST_ASSERT(false);
+                }
             }
         }
     }
@@ -112,20 +112,20 @@ private:
             BOOST_STATIC_ASSERT(sync::detail::system_duration::subsecond_fraction == 1000000000u);
 
             const int status = sync::detail::linux_::futex_timedwait(reinterpret_cast< int* >(&m_state), 0, time_left);
-            if (status == 0)
-                break;
-
-            switch (errno)
+            if (status != 0)
             {
-            case ETIMEDOUT:
-                return false;
+                switch (errno)
+                {
+                case ETIMEDOUT:
+                    return false;
 
-            case EINTR:       // signal received
-            case EWOULDBLOCK: // another thread has reset the event
-                continue;
+                case EINTR:       // signal received
+                case EWOULDBLOCK: // another thread has reset the event
+                    break;
 
-            default:
-                BOOST_ASSERT(false);
+                default:
+                    BOOST_ASSERT(false);
+                }
             }
         }
 
@@ -145,20 +145,20 @@ private:
             do
             {
                 const int status = sync::detail::linux_::futex_timedwait(reinterpret_cast< int* >(&m_state), 0, time_left);
-                if (status == 0)
-                    break;
-
-                switch (errno)
+                if (status != 0)
                 {
-                case ETIMEDOUT:
-                    return false;
+                    switch (errno)
+                    {
+                    case ETIMEDOUT:
+                        return false;
 
-                case EINTR:       // signal received
-                case EWOULDBLOCK: // another thread has reset the event
-                    continue;
+                    case EINTR:       // signal received
+                    case EWOULDBLOCK: // another thread has reset the event
+                        break;
 
-                default:
-                    BOOST_ASSERT(false);
+                    default:
+                        BOOST_ASSERT(false);
+                    }
                 }
             }
             while (m_state.load(detail::atomic_ns::memory_order_acquire) == 0);
