@@ -311,10 +311,11 @@ matrix:
             - sourceline: "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main"
               key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
 
+# Note: clang for 32-bit targets with UBSAN emits undefined references to __mulodi4
     - os: linux
       dist: xenial
       compiler: clang-UBSAN
-      env: UBSAN=1 TOOLSET=clang COMPILER=clang++-9 CXXSTD64=03,11,14,17 CXXSTD32=03,11 UBSAN_OPTIONS=print_stacktrace=1
+      env: UBSAN=1 TOOLSET=clang COMPILER=clang++-9 CXXSTD64=03,11,14,17 UBSAN_OPTIONS=print_stacktrace=1
       addons:
         apt:
           packages:
@@ -345,10 +346,11 @@ matrix:
             - sourceline: "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main"
               key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
 
+# Note: clang for 32-bit targets with UBSAN emits undefined references to __mulodi4
     - os: linux
       dist: xenial
       compiler: clang-libc++-UBSAN
-      env: UBSAN=1 TOOLSET=clang COMPILER=clang++-9 CXXSTD64=03,11,14,17 CXXSTD32=03,11 UBSAN_OPTIONS=print_stacktrace=1 CXXFLAGS="-stdlib=libc++" LINKFLAGS="-stdlib=libc++"
+      env: UBSAN=1 TOOLSET=clang COMPILER=clang++-9 CXXSTD64=03,11,14,17 UBSAN_OPTIONS=print_stacktrace=1 CXXFLAGS="-stdlib=libc++" LINKFLAGS="-stdlib=libc++"
       addons:
         apt:
           packages:
@@ -357,8 +359,6 @@ matrix:
             - linux-libc-dev:i386
             - libc++-9-dev
             - libc++abi-9-dev
-            - libc++-9-dev:i386
-            - libc++abi-9-dev:i386
           sources:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
             - sourceline: "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main"
