@@ -52,6 +52,11 @@ void test_std_chrono_system_clock_time_t_now_mismatch()
     {
         BOOST_TEST_EQ((t2 - t1), 1);
     }
+    // std::time may also be implemented on top of system clock and perform arithmetic rounding
+    else if (t1 > t2)
+    {
+        BOOST_TEST_EQ((t1 - t2), 1);
+    }
     else
     {
         BOOST_TEST_EQ(t1, t2);
