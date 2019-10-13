@@ -327,10 +327,11 @@ matrix:
             - sourceline: "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main"
               key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
 
+# Note: clang with libc++ for 32-bit targets emits linking errors about missing libc++ and libc++abi
     - os: linux
       dist: xenial
       compiler: clang-libc++
-      env: TOOLSET=clang COMPILER=clang++-9 CXXSTD64=03,11,14,17 CXXSTD32=03,11 CXXFLAGS="-stdlib=libc++" LINKFLAGS="-stdlib=libc++"
+      env: TOOLSET=clang COMPILER=clang++-9 CXXSTD64=03,11,14,17 CXXFLAGS="-stdlib=libc++" LINKFLAGS="-stdlib=libc++"
       addons:
         apt:
           packages:
