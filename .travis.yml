@@ -339,8 +339,6 @@ matrix:
             - linux-libc-dev:i386
             - libc++-9-dev
             - libc++abi-9-dev
-            - libc++-9-dev:i386
-            - libc++abi-9-dev:i386
           sources:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
             - sourceline: "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main"
