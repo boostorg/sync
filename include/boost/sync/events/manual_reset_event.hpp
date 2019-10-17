@@ -56,6 +56,8 @@ public:
     /**
      * Resets the event to the non-signaled state. Resetting a non-signalled event has no effect.
      *
+     * \b Memory Ordering: relaxed
+     *
      * \b Throws: if an error occurs.
      */
     void reset();
