@@ -16,6 +16,7 @@
 #define BOOST_SYNC_DETAIL_THROW_EXCEPTION_HPP_INCLUDED_
 
 #include <boost/throw_exception.hpp>
+#include <boost/assert/source_location.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
 #include <boost/sync/detail/config.hpp>
 #include <boost/sync/detail/header.hpp>
