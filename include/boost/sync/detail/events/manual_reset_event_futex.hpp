@@ -57,7 +57,7 @@ public:
     {
         unsigned int old_state = m_state.fetch_or(post_bit, boost::memory_order_release); // set state
         if ((old_state & post_bit) == 0u && (old_state & wait_count_mask) != 0u)
-            sync::detail::linux_::futex_broadcast(reinterpret_cast< int* >(&m_state.storage())); // wake all threads
+            sync::detail::linux_::futex_broadcast(reinterpret_cast< int* >(&m_state.value())); // wake all threads
     }
 
     void reset() BOOST_NOEXCEPT
@@ -74,7 +74,7 @@ public:
         unsigned int old_state = m_state.add(wait_count_one, boost::memory_order_relaxed);
         while ((old_state & post_bit) == 0u)
         {
-            sync::detail::linux_::futex_wait(reinterpret_cast< int* >(&m_state.storage()), old_state);
+            sync::detail::linux_::futex_wait(reinterpret_cast< int* >(&m_state.value()), old_state);
             old_state = m_state.load(boost::memory_order_relaxed);
         }
 
@@ -124,7 +124,7 @@ private:
             // Check that system time resolution is nanoseconds
             BOOST_STATIC_ASSERT(sync::detail::system_duration::subsecond_fraction == 1000000000u);
 
-            const int status = sync::detail::linux_::futex_timedwait(reinterpret_cast< int* >(&m_state.storage()), old_state, time_left);
+            const int status = sync::detail::linux_::futex_timedwait(reinterpret_cast< int* >(&m_state.value()), old_state, time_left);
             if (status != 0)
             {
                 const int err = errno;
@@ -163,7 +163,7 @@ private:
             BOOST_STATIC_ASSERT(sync::detail::system_duration::subsecond_fraction == 1000000000u);
             do
             {
-                const int status = sync::detail::linux_::futex_timedwait(reinterpret_cast< int* >(&m_state.storage()), old_state, time_left);
+                const int status = sync::detail::linux_::futex_timedwait(reinterpret_cast< int* >(&m_state.value()), old_state, time_left);
                 if (status != 0)
                 {
                     const int err = errno;
@@ -203,7 +203,6 @@ private:
     }
 
 private:
-    BOOST_STATIC_ASSERT_MSG(sizeof(boost::atomic< unsigned int >) == sizeof(int), "Boost.Sync: unexpected size of atomic< unsigned int >");
     boost::atomic< unsigned int > m_state;
 };
 
