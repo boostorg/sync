@@ -14,7 +14,7 @@
 #ifndef BOOST_SYNC_CONDITION_VARIABLES_CV_STATUS_HPP_INCLUDED_
 #define BOOST_SYNC_CONDITION_VARIABLES_CV_STATUS_HPP_INCLUDED_
 
-#include <boost/detail/scoped_enum_emulation.hpp>
+#include <boost/core/scoped_enum.hpp>
 #include <boost/sync/detail/config.hpp>
 #include <boost/sync/detail/header.hpp>
 
