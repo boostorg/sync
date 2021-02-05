@@ -7,7 +7,7 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/config.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/sync/locks/unique_lock.hpp>
 #include <boost/sync/mutexes/mutex.hpp>
 #include <boost/sync/condition_variables/condition_variable.hpp>

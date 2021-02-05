@@ -6,7 +6,7 @@
 
 #include <boost/core/lightweight_test.hpp>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/sync/mutexes.hpp>
 #include <boost/sync/locks.hpp>

@@ -5,7 +5,7 @@
 
 #include <boost/core/lightweight_test.hpp>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/chrono.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/thread_time.hpp>
