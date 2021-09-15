@@ -18,8 +18,10 @@ Boost.Sync, part of collection of the [Boost C++ Libraries](https://github.com/b
 
 ### Build status
 
-Master: [![AppVeyor](https://ci.appveyor.com/api/projects/status/x5m5lueci0iu4udr/branch/master?svg=true)](https://ci.appveyor.com/project/Lastique/sync/branch/master) [![Travis CI](https://travis-ci.org/boostorg/sync.svg?branch=master)](https://travis-ci.org/boostorg/sync)
-Develop: [![AppVeyor](https://ci.appveyor.com/api/projects/status/x5m5lueci0iu4udr/branch/develop?svg=true)](https://ci.appveyor.com/project/Lastique/sync/branch/develop) [![Travis CI](https://travis-ci.org/boostorg/sync.svg?branch=develop)](https://travis-ci.org/boostorg/sync)
+Branch          | GitHub Actions | AppVeyor | Test Matrix | Dependencies |
+:-------------: | -------------- | -------- | ----------- | ------------ |
+[`master`](https://github.com/boostorg/sync/tree/master) | [![GitHub Actions](https://github.com/boostorg/sync/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/boostorg/sync/actions?query=branch%3Amaster) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/x5m5lueci0iu4udr/branch/master?svg=true)](https://ci.appveyor.com/project/Lastique/sync/branch/master) | [![Tests](https://img.shields.io/badge/matrix-master-brightgreen.svg)](http://www.boost.org/development/tests/master/developer/sync.html) | [![Dependencies](https://img.shields.io/badge/deps-master-brightgreen.svg)](https://pdimov.github.io/boostdep-report/master/sync.html)
+[`develop`](https://github.com/boostorg/sync/tree/develop) | [![GitHub Actions](https://github.com/boostorg/sync/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/boostorg/sync/actions?query=branch%3Adevelop) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/x5m5lueci0iu4udr/branch/develop?svg=true)](https://ci.appveyor.com/project/Lastique/sync/branch/develop) | [![Tests](https://img.shields.io/badge/matrix-develop-brightgreen.svg)](http://www.boost.org/development/tests/develop/developer/sync.html) | [![Dependencies](https://img.shields.io/badge/deps-develop-brightgreen.svg)](https://pdimov.github.io/boostdep-report/develop/sync.html)
 
 ### License
 
