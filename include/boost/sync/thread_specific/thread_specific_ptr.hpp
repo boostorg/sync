@@ -16,7 +16,7 @@
 #define BOOST_SYNC_THREAD_SPECIFIC_THREAD_SPECIFIC_PTR_HPP_INCLUDED_
 
 #include <boost/assert.hpp>
-#include <boost/utility/explicit_operator_bool.hpp>
+#include <boost/core/explicit_operator_bool.hpp>
 #include <boost/sync/detail/config.hpp>
 #include <boost/sync/detail/tss.hpp>
 #include <boost/sync/detail/header.hpp>
