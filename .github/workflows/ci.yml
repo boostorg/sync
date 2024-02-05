@@ -372,12 +372,14 @@ jobs:
               - clang-14
               - libc++-14-dev
               - libc++abi-14-dev
+            gcc_toolchain: 11
           - toolset: clang
             compiler: clang++-15
             cxxstd64: "11,14,17,20,2b"
             os: ubuntu-22.04
             install:
               - clang-15
+            gcc_toolchain: 11
           - toolset: clang
             compiler: clang++-15
             cxxstd64: "11,14,17,20,2b"
