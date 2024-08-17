@@ -74,11 +74,11 @@ public:
     void lock_shared() noexcept;
 
     /*!
-     * \brief Attempts to exclusively lock the mutex
+     * \brief Attempts to acquire shared ownersip of the mutex
      *
-     * If the mutex is not exclusively locked or shared locked, the method acquires a shared lock and returns \c true. Otherwise the method returns \c false.
+     * If the mutex is not exclusively locked, the method acquires a shared lock and returns \c true. Otherwise the method returns \c false.
      */
-    bool try_lock() noexcept;
+    bool try_lock_shared() noexcept;
 
     /*!
      * \brief Unlocks the mutex
