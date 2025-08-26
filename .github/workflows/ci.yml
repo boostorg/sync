@@ -391,7 +391,8 @@ jobs:
           - toolset: clang
             compiler: clang++-16
             cxxstd64: "11,14,17,20,2b"
-            os: ubuntu-24.04
+            os: ubuntu-latest
+            container: ubuntu:24.04
             install:
               - clang-16
               - g++-11
@@ -401,7 +402,8 @@ jobs:
           - toolset: clang
             compiler: clang++-17
             cxxstd64: "11,14,17,20,23"
-            os: ubuntu-24.04
+            os: ubuntu-latest
+            container: ubuntu:24.04
             install:
               - clang-17
               - g++-11
@@ -411,7 +413,8 @@ jobs:
           - toolset: clang
             compiler: clang++-18
             cxxstd64: "11,14,17,20,23,26"
-            os: ubuntu-24.04
+            os: ubuntu-latest
+            container: ubuntu:24.04
             install:
               - clang-18
               - g++-13
@@ -420,7 +423,8 @@ jobs:
           - toolset: clang
             compiler: clang++-19
             cxxstd64: "11,14,17,20,23,26"
-            os: ubuntu-24.04
+            os: ubuntu-latest
+            container: ubuntu:24.04
             install:
               - clang-19
               - g++-13
@@ -429,7 +433,8 @@ jobs:
           - toolset: clang
             compiler: clang++-20
             cxxstd64: "11,14,17,20,23,26"
-            os: ubuntu-25.04
+            os: ubuntu-latest
+            container: ubuntu:25.04
             install:
               - clang-20
               - g++-13
@@ -440,7 +445,8 @@ jobs:
             cxxstd64: "11,14,17,20,23,26"
             cxxflags: -stdlib=libc++
             linkflags: -stdlib=libc++
-            os: ubuntu-25.04
+            os: ubuntu-latest
+            container: ubuntu:25.04
             install:
               - clang-20
               - libc++-20-dev
