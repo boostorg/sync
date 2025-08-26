@@ -21,7 +21,7 @@ env:
   GIT_FETCH_JOBS: 8
   NET_RETRY_COUNT: 5
   DEFAULT_BUILD_VARIANT: debug,release
-  DEFAULT_INSTRUCTION_SET: core2
+  DEFAULT_INSTRUCTION_SET: sandy-bridge
 
 jobs:
   posix:
@@ -37,7 +37,7 @@ jobs:
           # does not have permissions to configure dpkg/apt, which prevents adding i386 target architecture.
           # Linux, gcc
           - toolset: gcc-4.8
-            cxxstd64: "11"
+            cxxstd64: "11,1y"
             cxxstd32: "11"
             os: ubuntu-latest
             container: ubuntu:18.04
@@ -46,7 +46,7 @@ jobs:
               - g++-4.8-multilib
               - linux-libc-dev:i386
           - toolset: gcc-4.9
-            cxxstd64: "11"
+            cxxstd64: "11,14"
             cxxstd32: "11"
             os: ubuntu-latest
             container: ubuntu:16.04
@@ -320,10 +320,10 @@ jobs:
             container: ubuntu:22.04
             install:
               - clang-11
-              - g++-11
-              - g++-11-multilib
+              - g++-10
+              - g++-10-multilib
               - linux-libc-dev:i386
-            gcc_toolchain: 11
+            gcc_toolchain: 10
           - toolset: clang
             compiler: clang++-12
             cxxstd64: "11,14,17,20,2b,11-gnu,14-gnu,17-gnu,20-gnu,2b-gnu"
@@ -361,36 +361,21 @@ jobs:
               - linux-libc-dev:i386
             gcc_toolchain: 11
           - toolset: clang
-            compiler: clang++-14
-            cxxstd64: "11,14,17,20,2b"
-            cxxflags: -stdlib=libc++
-            linkflags: -stdlib=libc++
-            os: ubuntu-22.04
-            install:
-              - clang-14
-              - libc++-14-dev
-              - libc++abi-14-dev
-            gcc_toolchain: 11
-          - toolset: clang
             compiler: clang++-15
-            cxxstd64: "11,14,17,20,2b"
-            os: ubuntu-22.04
+            cxxstd64: "11,14,17,20,2b,11-gnu,14-gnu,17-gnu,20-gnu,2b-gnu"
+            cxxstd32: "11,11-gnu"
+            os: ubuntu-latest
+            container: ubuntu:22.04
             install:
               - clang-15
+              - g++-11
+              - g++-11-multilib
+              - linux-libc-dev:i386
             gcc_toolchain: 11
-          - toolset: clang
-            compiler: clang++-15
-            cxxstd64: "11,14,17,20,2b"
-            os: ubuntu-22.04
-            install:
-              - clang-15
-              - libc++-15-dev
-              - libc++abi-15-dev
-            cxxflags: -stdlib=libc++
-            linkflags: -stdlib=libc++
           - toolset: clang
             compiler: clang++-16
-            cxxstd64: "11,14,17,20,2b"
+            cxxstd64: "11,14,17,20,2b,11-gnu,14-gnu,17-gnu,20-gnu,2b-gnu"
+            cxxstd32: "11,11-gnu"
             os: ubuntu-latest
             container: ubuntu:24.04
             install:
@@ -401,7 +386,8 @@ jobs:
             gcc_toolchain: 11
           - toolset: clang
             compiler: clang++-17
-            cxxstd64: "11,14,17,20,23"
+            cxxstd64: "11,14,17,20,23,11-gnu,14-gnu,17-gnu,20-gnu,23-gnu"
+            cxxstd32: "11,11-gnu"
             os: ubuntu-latest
             container: ubuntu:24.04
             install:
@@ -412,7 +398,8 @@ jobs:
             gcc_toolchain: 11
           - toolset: clang
             compiler: clang++-18
-            cxxstd64: "11,14,17,20,23,26"
+            cxxstd64: "11,14,17,20,23,26,11-gnu,14-gnu,17-gnu,20-gnu,23-gnu,26-gnu"
+            cxxstd32: "11,11-gnu"
             os: ubuntu-latest
             container: ubuntu:24.04
             install:
@@ -422,7 +409,8 @@ jobs:
               - linux-libc-dev:i386
           - toolset: clang
             compiler: clang++-19
-            cxxstd64: "11,14,17,20,23,26"
+            cxxstd64: "11,14,17,20,23,26,11-gnu,14-gnu,17-gnu,20-gnu,23-gnu,26-gnu"
+            cxxstd32: "11,11-gnu"
             os: ubuntu-latest
             container: ubuntu:24.04
             install:
@@ -432,7 +420,8 @@ jobs:
               - linux-libc-dev:i386
           - toolset: clang
             compiler: clang++-20
-            cxxstd64: "11,14,17,20,23,26"
+            cxxstd64: "11,14,17,20,23,26,11-gnu,14-gnu,17-gnu,20-gnu,23-gnu,26-gnu"
+            cxxstd32: "11,11-gnu"
             os: ubuntu-latest
             container: ubuntu:25.04
             install:
@@ -530,6 +519,11 @@ jobs:
                     fi
                     apt-get -o Acquire::Retries=$NET_RETRY_COUNT install -y sudo software-properties-common tzdata wget curl apt-transport-https ca-certificates make build-essential g++ $PYTHON_PACKAGE python3 perl git cmake
                 fi
+            fi
+            if [ -n "${{matrix.macosx_version_min}}" -a -d "/Library/Developer/CommandLineTools/SDKs" ]
+            then
+                echo "Available MacOS SDKs:"
+                ls "/Library/Developer/CommandLineTools/SDKs"
             fi
             git config --global pack.threads 0
 
@@ -735,6 +729,10 @@ jobs:
             fi
 
   windows:
+    defaults:
+      run:
+        shell: cmd
+
     strategy:
       fail-fast: false
       matrix:
@@ -763,7 +761,6 @@ jobs:
 
     steps:
       - name: Setup Boost
-        shell: cmd
         run: |
             echo GITHUB_REPOSITORY: %GITHUB_REPOSITORY%
             for /f %%i in ("%GITHUB_REPOSITORY%") do set LIBRARY=%%~nxi
@@ -799,7 +796,6 @@ jobs:
             b2 -d0 headers
 
       - name: Run tests
-        shell: cmd
         run: |
             cd boost-root
             set "B2_ARGS=-j %NUMBER_OF_PROCESSORS% toolset=${{matrix.toolset}} embed-manifest-via=linker"
