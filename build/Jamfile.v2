@@ -1,7 +1,7 @@
 # Copyright 2006-2007 Roland Schwarz.
 # Copyright 2007 Anthony Williams
 # Copyright 2011-2012 Vicente J.Botet Escriba.
-# Copyright 2013 Andrey Semashev
+# Copyright 2013-2025 Andrey Semashev
 # Distributed under the Boost Software License, Version 1.0. (See
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -30,7 +30,33 @@ import indirect ;
 import path ;
 import configure ;
 
-project boost/sync
+constant boost_sync_public_deps :
+    <library>/boost/assert//boost_assert
+    <library>/boost/atomic//boost_atomic
+    <library>/boost/config//boost_config
+    <library>/boost/core//boost_core
+    <library>/boost/move//boost_move
+    <library>/boost/mpl//boost_mpl
+    <library>/boost/preprocessor//boost_preprocessor
+    <library>/boost/static_assert//boost_static_assert
+    <library>/boost/system//boost_system
+    <library>/boost/throw_exception//boost_throw_exception
+    <target-os>windows:<library>/boost/winapi//boost_winapi
+    ;
+
+constant boost_sync_private_deps :
+    <library>/boost/intrusive//boost_intrusive
+    ;
+
+constant boost_sync_support_public_deps :
+    <library>/boost/sync//boost_sync
+    <library>/boost/chrono//boost_chrono
+    <library>/boost/date_time//boost_date_time
+    <library>/boost/ratio//boost_ratio
+    <library>/boost/static_assert//boost_static_assert
+    ;
+
+project
     : source-location ../src
     : requirements
       <threading>multi
@@ -171,10 +197,17 @@ lib boost_sync
       sync_platform_sources
     :
       <conditional>@requirements
+      $(boost_sync_private_deps)
+      $(boost_sync_public_deps)
     :
     :
       <conditional>@usage-requirements
+      $(boost_sync_public_deps)
     ;
 
-
-boost-install boost_sync ;
+alias boost_sync_with_support
+    : requirements
+        $(boost_sync_support_public_deps)
+    : usage-requirements
+        $(boost_sync_support_public_deps)
+    ;
