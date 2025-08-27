@@ -33,7 +33,9 @@ environment:
     - TOOLSET: clang-win
       ADDRESS_MODEL: 64
       CXXSTD: 14,17,latest
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      B2_ARGS: cxxflags="-mcx16"
+      ENV_SCRIPT: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     - TOOLSET: gcc
       ADDRESS_MODEL: 64
       CXXSTD: 11,11-gnu
@@ -65,7 +67,8 @@ environment:
     - TOOLSET: clang-win
       ADDRESS_MODEL: 32
       CXXSTD: 14,17,latest
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      ENV_SCRIPT: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     - TOOLSET: gcc
       ADDRESS_MODEL: 32
       CXXSTD: 11,11-gnu
@@ -100,5 +103,6 @@ build: off
 
 test_script:
   - PATH=%ADDPATH%;%PATH%
+  - if not "%ENV_SCRIPT%" == "" call "%ENV_SCRIPT%"
   - if not "%CXXSTD%" == "" set CXXSTD=cxxstd=%CXXSTD%
   - b2 -j %NUMBER_OF_PROCESSORS% libs/sync/test variant=release toolset=%TOOLSET% address-model=%ADDRESS_MODEL% %CXXSTD% %B2_ARGS%
