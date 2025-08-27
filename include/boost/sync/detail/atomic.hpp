@@ -39,7 +39,10 @@
 #ifdef BOOST_SYNC_USE_STD_ATOMIC
 #include <atomic>
 #else
-#include <boost/atomic.hpp>
+#include <boost/memory_order.hpp>
+#include <boost/atomic/atomic.hpp>
+#include <boost/atomic/atomic_flag.hpp>
+#include <boost/atomic/fences.hpp>
 #endif
 
 #include <boost/sync/detail/header.hpp>
